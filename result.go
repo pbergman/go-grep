@@ -1,8 +1,9 @@
-package grep
+package gogrep
 
 import (
 	"regexp"
 	"sync"
+	"fmt"
 )
 
 // MatchResults is basic struct for a collection of results
@@ -18,6 +19,29 @@ func (r *MatchResults) add(m *MatchResult) {
 	r.Result = append(r.Result, m)
 }
 
+// String implementation
+func (f *MatchResults) String() string {
+	var s string
+	for _, result := range(f.Result) {
+		match := result.RegExp.FindSubmatchIndex(result.Line)
+		offset := 0
+		length := len(result.Line)
+		if len(result.Line) > match[1] {
+			length = match[1]
+		}
+		if ( 0 < match[0]) {
+			offset = match[0]
+		}
+		s += fmt.Sprintf(
+			"%s(%d) %s\n",
+			result.File,
+			result.LineNumber,
+			result.Line[offset:length],
+		)
+	}
+	return s
+}
+
 // MatchResult is basic struct for the a result
 type MatchResult struct {
 	File       string
@@ -25,3 +49,5 @@ type MatchResult struct {
 	Line       []byte
 	RegExp     *regexp.Regexp
 }
+
+

@@ -1,6 +1,6 @@
 ## File Grep
 
-A simple library that i use for grepping/searching config files.  
+A simple library that i use for grepping/searching files.  
 
 It is similar as:
 
@@ -8,13 +8,12 @@ It is similar as:
 cat file | egrep pattern 
 ```
 
-But this is fully written in go and uses goroutines for opening files
-and parsing files.
+But this is fully written in go and uses goroutines for parsing files.
 
 small example:
 
 ```
-grep := NewFileGrep("/proc/self/smaps", "Pss:\\s+(\\d+)\\skB")
+grep := NewFileGrep("Pss:\\s+(\\d+)\\skB", "/proc/self/smaps")
 for _, result := range(grep.Search().Result) {
     size := result.RegExp.FindStringSubmatch(string(result.Line))
     i, _ := strconv.Atoi(size[1])
@@ -22,6 +21,3 @@ for _, result := range(grep.Search().Result) {
 }
 fmt.Sprintf("Total %d kb\n", total)
 ```
-
-the file or directory can be a pattern like /a/b/*/d or /a/b/*.csv
-see match and glob from the filepath package.

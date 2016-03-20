@@ -1,4 +1,4 @@
-package grep
+package gogrep
 
 // ResultSort custom implementation of sort.Interface for sorting the results
 type ResultSort []*MatchResult
