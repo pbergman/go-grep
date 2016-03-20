@@ -1,8 +1,8 @@
 package gogrep
 
 import (
-	"testing"
 	"strconv"
+	"testing"
 )
 
 func BenchmarkGoGrep(b *testing.B) {
@@ -13,7 +13,7 @@ func BenchmarkGoGrep(b *testing.B) {
 		// Rest pointer for each iteration
 		test.Reset()
 		total := 0
-		for _, result := range(test.Search().Result) {
+		for _, result := range test.Search().Result {
 			size := result.RegExp.FindStringSubmatch(string(result.Line))
 			i, _ := strconv.Atoi(size[1])
 			total += i

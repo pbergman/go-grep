@@ -1,9 +1,9 @@
 package gogrep
 
 import (
+	"fmt"
 	"regexp"
 	"sync"
-	"fmt"
 )
 
 // MatchResults is basic struct for a collection of results
@@ -22,14 +22,14 @@ func (r *MatchResults) add(m *MatchResult) {
 // String implementation
 func (f *MatchResults) String() string {
 	var s string
-	for _, result := range(f.Result) {
+	for _, result := range f.Result {
 		match := result.RegExp.FindSubmatchIndex(result.Line)
 		offset := 0
 		length := len(result.Line)
 		if len(result.Line) > match[1] {
 			length = match[1]
 		}
-		if ( 0 < match[0]) {
+		if 0 < match[0] {
 			offset = match[0]
 		}
 		s += fmt.Sprintf(
@@ -49,5 +49,3 @@ type MatchResult struct {
 	Line       []byte
 	RegExp     *regexp.Regexp
 }
-
-

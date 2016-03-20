@@ -1,12 +1,12 @@
 package gogrep
 
 import (
-	"os"
-	"regexp"
-	"sync"
 	"bytes"
 	"io"
+	"os"
+	"regexp"
 	"sort"
+	"sync"
 )
 
 // GoGrep basic struct for for the file search
@@ -110,10 +110,9 @@ func readLine(file *os.File) (line, error) {
 	return line(buffer.Bytes()), nil
 }
 
-
 func NewGoGrep(pattern string, files ...string) (*GoGrep, error) {
 	instance := &GoGrep{
-		Files:        make([]*os.File, len(files) - 1),
+		Files:        make([]*os.File, len(files)-1),
 		Pattern:      regexp.MustCompile(pattern),
 		MaxWorkers:   20,
 		MaxOpenFiles: 0,
@@ -147,7 +146,7 @@ func (f *GoGrep) Close() error {
 // Reset the current pointers of open files
 func (f *GoGrep) Reset() error {
 	for _, file := range f.Files {
-		if _, err := file.Seek(0,0); err != nil {
+		if _, err := file.Seek(0, 0); err != nil {
 			return err
 		}
 	}
