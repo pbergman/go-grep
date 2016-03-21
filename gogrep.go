@@ -137,7 +137,7 @@ func NewGoGrep(pattern string, files ...string) (*GoGrep, *Errors) {
 }
 
 // Close all open files
-func (f *GoGrep) Close() error {
+func (f *GoGrep) Close() *Errors {
 	errors := new(Errors)
 	for _, file := range f.Files {
 		if err := file.Close(); err != nil {
