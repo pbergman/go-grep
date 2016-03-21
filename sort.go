@@ -3,12 +3,12 @@ package gogrep
 // ResultSort custom implementation of sort.Interface for sorting the results
 type ResultSort []*MatchResult
 
-// Len @sort.Interface
+// Len implementation of sort.Interface
 func (s ResultSort) Len() int {
 	return len(s)
 }
 
-// Swap @sort.Interface
+// Swap implementation of  sort.Interface
 func (s ResultSort) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }

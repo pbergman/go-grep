@@ -19,7 +19,7 @@ type GoGrep struct {
 
 // getMaxOpenFiles will return the set maxOpenFiles, if value is 0 it will be set to size of files slice
 func (f *GoGrep) getMaxOpenFiles() uint64 {
-	if limit := f.MaxOpenFiles; limit <= 0 {
+	if limit := f.MaxOpenFiles; limit == 0 {
 		return uint64(len(f.Files))
 	} else {
 		return limit
@@ -110,7 +110,8 @@ func readLine(file *os.File) (line, error) {
 	return line(buffer.Bytes()), nil
 }
 
-func NewGoGrep(pattern string, files ...string) (*GoGrep, error) {
+func NewGoGrep(pattern string, files ...string) (*GoGrep, *Errors) {
+	errors := new(Errors)
 	instance := &GoGrep{
 		Files:        make([]*os.File, len(files)-1),
 		Pattern:      regexp.MustCompile(pattern),
@@ -119,36 +120,40 @@ func NewGoGrep(pattern string, files ...string) (*GoGrep, error) {
 	}
 	for _, file := range files {
 		if stat, err := os.Stat(file); err != nil {
-			return nil, err
+			errors.add(err)
+			continue
 		} else {
 			if stat.Mode().IsRegular() {
 				if of, err := os.Open(file); err != nil {
-					return nil, err
+					errors.add(err)
+					continue
 				} else {
 					instance.Files = append(instance.Files, of)
 				}
 			}
 		}
 	}
-	return instance, nil
+	return instance, errors
 }
 
 // Close all open files
 func (f *GoGrep) Close() error {
+	errors := new(Errors)
 	for _, file := range f.Files {
 		if err := file.Close(); err != nil {
-			return err
+			errors.add(err)
 		}
 	}
-	return nil
+	return errors
 }
 
 // Reset the current pointers of open files
-func (f *GoGrep) Reset() error {
+func (f *GoGrep) Reset() *Errors {
+	errors := new(Errors)
 	for _, file := range f.Files {
 		if _, err := file.Seek(0, 0); err != nil {
-			return err
+			errors.add(err)
 		}
 	}
-	return nil
+	return errors
 }
